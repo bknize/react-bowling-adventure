@@ -5,7 +5,8 @@ export interface FrameModel {
     maxRolls: number,
     isStrike: boolean,
     isSpare: boolean,
-    totalScore: number
+    totalScore: number,
+    bonusScore: number
   }
 
 export interface FrameUpdate {
@@ -16,8 +17,9 @@ function Frame(props: { model: FrameModel, index: number }) {
 
     return (
         <div>
-            { props.index+1 } { props.model.rolls } { props.model.maxRolls } total: { props.model.rolls.reduce((prev, curr) => prev + curr, 0) }
+            { props.index+1 } { props.model.rolls } { props.model.maxRolls } total: { props.model.totalScore } Bonus: { props.model.bonusScore }
             { props.model.isStrike ? 'Strike' : '' } { props.model.isSpare ? 'Spare' : ''}
+            
             {/* <button onClick={ () =>  }>Test</button> */}
         </div>
     )

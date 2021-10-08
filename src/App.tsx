@@ -3,7 +3,8 @@ import './App.scss'
 import Roller from './Roller/Roller';
 import Frame, { FrameModel } from './Frames/Frame';
 import { Col, Container, Row } from 'react-bootstrap';
-import { scoreFrames, updateFrameData } from './State';
+import { updateGameData } from './State';
+import { perfectGameInit, randomGameInit, stateInit, testDataInit } from './Data';
 
 export interface RollNumberEvent {
   rollNumber: number
@@ -13,27 +14,8 @@ export interface GameState {
   frameIndex: number,
   gameOver: boolean,
   pinsRemaining: number,
-  frames: FrameModel[]
-}
-
-function stateInit() {
-  return {
-    frameIndex: 0,
-    gameOver: false,
-    pinsRemaining: 10,
-    frames: framesInit()
-  }
-}
-
-function framesInit() {
-  return new Array(10).fill({
-        rolls: [],
-        maxRolls: 2,
-        isStrike: false,
-        isSpare: false,
-        totalScore: 10
-      }
-    )
+  frames: FrameModel[],
+  totalScore: number
 }
 
 
@@ -41,35 +23,23 @@ function App() {
   const [state, setState] = useState(stateInit())
 
   function handleRoll(e: RollNumberEvent) {
-    let newState = { ...state };
-
-    newState.frames = updateFrameData(state, e)
-    newState.pinsRemaining -= e.rollNumber;
-
-    let currentFrame: FrameModel = newState.frames[state.frameIndex]
-
-    if (currentFrame.rolls.length >= currentFrame.maxRolls) {
-      newState.frameIndex += 1
-      newState.pinsRemaining = 10;
-    }
-    if (currentFrame.isStrike) {
-      newState.frameIndex += 1
-      newState.pinsRemaining = 10;
-    }
-    if (newState.frameIndex === 10) {
-      newState.gameOver = true;
-    }
-
-    newState.frames = scoreFrames(newState)
-
-    setState(newState)
-    
+    setState({
+      ...updateGameData(state, e)
+    })
   }
 
   function reset() {
     setState(stateInit())
   }
-
+  function perfectGame() {
+    setState(perfectGameInit())
+  }
+  function randomGame() {
+    setState(randomGameInit())
+  }
+  function testDataGame() {
+    setState(testDataInit())
+  }
   return (
     <Container fluid>
       <Row>
@@ -88,6 +58,12 @@ function App() {
         }
         {
           state.gameOver === true && <button className="btn btn-primary" onClick={ () => reset() }>Reset</button>
+        }
+        <button className="btn btn-default" onClick={ () => testDataGame() }>Test Data</button>
+        <button className="btn btn-default" onClick={ () => perfectGame() }>Perfect Game!</button>
+        <button className="btn btn-default" onClick={ () => randomGame() }>Random Data</button>
+        {
+          state.totalScore
         }
         
       </div>

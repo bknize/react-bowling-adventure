@@ -3,27 +3,27 @@ import { Col, FormControl, InputGroup, Row } from 'react-bootstrap';
 import { GameState, RollNumberEvent } from '../App';
 
 function Roller(props: { state: GameState, onroll: (e: RollNumberEvent) => void}) {
-    const [rollNumber, setRollNumber] = useState('0');
+    const [rollInputValue, setRollInputValue] = useState('0');
 
     function RNG(): number {
         return Math.floor( Math.random() * (props.state.pinsRemaining +1) )
     }
 
     function roll(number?: number) {
-        props.onroll({ rollNumber: number || parseInt(rollNumber) || 0})
+        props.onroll({ rollNumber: number || parseInt(rollInputValue) || 0})
     }
 
     function isNumberPositive(): boolean {
-        return parseInt(rollNumber) < 0   
+        return parseInt(rollInputValue) < 0   
     }
     function isNumberValid(): boolean {
-        return parseInt(rollNumber) >= 0 && parseInt(rollNumber) <= props.state.pinsRemaining
+        return parseInt(rollInputValue) >= 0 && parseInt(rollInputValue) <= props.state.pinsRemaining
     }
     function isNumberHigherThanPins(): boolean {
-        return parseInt(rollNumber) > props.state.pinsRemaining
+        return parseInt(rollInputValue) > props.state.pinsRemaining
     }
     function isRollButtonDisabled(): boolean {
-        return parseInt(rollNumber) < 0 || props.state.gameOver || parseInt(rollNumber) > props.state.pinsRemaining
+        return parseInt(rollInputValue) < 0 || props.state.gameOver || parseInt(rollInputValue) > props.state.pinsRemaining
     }
     function isRandomButtonDisabled(): boolean {
         return props.state.gameOver
@@ -35,7 +35,7 @@ function Roller(props: { state: GameState, onroll: (e: RollNumberEvent) => void}
                 <Col>
                     <InputGroup className="">
                         <FormControl id="number" size="lg" type="number" placeholder="Number of Pins to Hit"
-                        value={ rollNumber } onChange={(event) => setRollNumber(event.target.value)} />
+                        value={ rollInputValue } onChange={(event) => setRollInputValue(event.target.value)} />
                     </InputGroup>
                 </Col>
             </Row>
