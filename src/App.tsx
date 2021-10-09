@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import './App.scss'
 import Roller from './Roller/Roller';
-import Frame, { FrameModel } from './Frames/Frame';
-import { Col, Container, Row } from 'react-bootstrap';
+import { FrameModel } from './Frames/Frame';
+import { Col, Container, Row, Button, Modal, InputGroup, FormControl, Form } from 'react-bootstrap';
 import { updateGameData } from './State';
 import { perfectGameInit, randomGameInit, stateInit, testDataInit } from './Data';
+import FrameGrid from './Frames/Frame';
+import { FaEdit } from "react-icons/fa";
 
 export interface RollNumberEvent {
   rollNumber: number
@@ -21,11 +23,19 @@ export interface GameState {
 
 function App() {
   const [state, setState] = useState(stateInit())
+  const [player, setPlayer] = useState('Ben')
+  const [isModalShowing, setIsModalShowing] = useState(false)
 
   function handleRoll(e: RollNumberEvent) {
     setState({
       ...updateGameData(state, e)
     })
+  }
+  function handleClose(e: string) {
+    if (e.length) {
+      setPlayer(e)
+    }
+    setIsModalShowing(false)
   }
 
   function reset() {
@@ -41,35 +51,71 @@ function App() {
     setState(testDataInit())
   }
   return (
-    <Container fluid>
+    <Container>
       <Row>
         <Col>
-          <h1>Bowling Adventure</h1>
-          { state.pinsRemaining }
+          <h1>{ player }'s Bowling Adventure <Button variant="link" size="sm" onClick={ () => setIsModalShowing(true) }><FaEdit /></Button></h1>
         </Col>
       </Row>
       <Roller state={ state } onroll={ (e: RollNumberEvent) => handleRoll(e)} />
-
-      
-      {/* Frame: { gameState.frameIndex+1 } Roll: { frameList[gameState.frameIndex].rolls.length+1 } */}
-      <div>
-        {
-          state.frames.map((model, index) => <Frame key={'frame-'+index } model={ model } index={ index } />)
-        }
-        {
-          state.gameOver === true && <button className="btn btn-primary" onClick={ () => reset() }>Reset</button>
-        }
-        <button className="btn btn-default" onClick={ () => testDataGame() }>Test Data</button>
-        <button className="btn btn-default" onClick={ () => perfectGame() }>Perfect Game!</button>
-        <button className="btn btn-default" onClick={ () => randomGame() }>Random Data</button>
-        {
-          state.totalScore
-        }
-        
-      </div>
+      <FrameGrid frames={ state.frames } player={ player } frameIndex={ state.frameIndex } />
+      <Row>
+        <Col>
+          <h2>{ state.totalScore }</h2>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <div className="button-container">
+            <Button size="lg" variant="outline-primary" onClick={ () => testDataGame() }>Test Data</Button>
+            <Button size="lg" variant="outline-primary" onClick={ () => perfectGame() }>Perfect Game!</Button>
+            <Button size="lg" variant="outline-primary" onClick={ () => randomGame() }>Random Data</Button>
+            {
+              state.gameOver === true && <Button size="lg" variant="primary" onClick={ () => reset() }>Reset</Button>
+            }
+          </div>
+        </Col>
+      </Row>
+      <EditModal player={ player } show={ isModalShowing } onclose={ (e: string ) => handleClose(e) } />
     </Container>
   );
 
+}
+
+function EditModal(props: { player: string, show: boolean, onclose: (e: string ) => void }) {
+  const [nameInputValue, setNameInputValue] = useState(props.player);
+
+  function handleClose() {
+    props.onclose('')
+  }
+  function handleSave() {
+    props.onclose(nameInputValue)
+  }
+
+
+  return (
+    <Modal show={props.show} onHide={ handleClose }>
+    <Modal.Header closeButton>
+      <Modal.Title>Rename Player</Modal.Title>
+    </Modal.Header>
+    <Modal.Body>
+      <Form.Label htmlFor="player">Whose Bowling Adventure will it be?</Form.Label>
+      <InputGroup>
+          <FormControl id="player" size="lg" type="text"
+          value={ nameInputValue } onChange={(event) => setNameInputValue(event.target.value)} />
+      </InputGroup>
+
+    </Modal.Body>
+    <Modal.Footer>
+      <Button variant="secondary" onClick={ handleClose }>
+        Close
+      </Button>
+      <Button variant="primary" onClick={ handleSave }>
+        Save Changes
+      </Button>
+    </Modal.Footer>
+  </Modal>
+  )
 }
 
 export default App;
