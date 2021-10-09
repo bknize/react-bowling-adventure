@@ -27,6 +27,7 @@ function Roller(props: { state: GameState, onroll: (e: RollNumberEvent) => void}
             parseInt(rollInputValue) > props.state.pinsRemaining ||
             rolling
     }
+
     function isRandomButtonDisabled(): boolean {
         return props.state.gameOver || rolling
     }
@@ -58,6 +59,7 @@ function PinGraphic(props: { pinsRemaining: number, rolling: boolean }) {
     function getPins() {
         return new Array(props.pinsRemaining).fill(<img className="pin-image" src={ Pin } alt="Bowling pin" />)
     }
+
     function getBallPosition() {
         if (props.rolling) {
             return "ball__rolling"
@@ -85,12 +87,14 @@ function ValidationMessage(props: { rollInputValue: string, pinsRemaining: numbe
         }
         return null
     }
+
     function inputExceedsPins(): string | null {
         if (rollNumber > props.pinsRemaining) {
             return `Let's keep this reasonable, there are only ${props.pinsRemaining} up.`
         }
         return null
     }
+    
     function findVariant() {
         if (inputExceedsPins() || inputIsNegative()) {
             return 'danger'

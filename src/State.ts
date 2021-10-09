@@ -50,9 +50,11 @@ export function updateGameData(state: GameState, e: RollNumberEvent): GameState 
     let newState = {...state}
     let frames = updateFrameData(newState, e);
     let currentFrame: FrameModel = frames[state.frameIndex]
+
     let knockDownPins = () => {
         newState.pinsRemaining -= e.rollNumber;
     }
+
     let resetPins = () => {
         newState.pinsRemaining = 10;
     }
@@ -95,4 +97,3 @@ export function updateGameData(state: GameState, e: RollNumberEvent): GameState 
         totalScore: calculateTotalScore(frames)
     }
 }
-

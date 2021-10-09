@@ -31,6 +31,7 @@ function App() {
       ...updateGameData(state, e)
     })
   }
+
   function handleClose(e: string) {
     if (e.length) {
       setPlayer(e)
@@ -41,15 +42,19 @@ function App() {
   function reset() {
     setState(stateInit())
   }
+
   function perfectGame() {
     setState(perfectGameInit())
   }
+
   function randomGame() {
     setState(randomGameInit())
   }
+
   function testDataGame() {
     setState(testDataInit())
   }
+
   return (
     <Container>
       <Row>
@@ -88,10 +93,10 @@ function EditModal(props: { player: string, show: boolean, onclose: (e: string )
   function handleClose() {
     props.onclose('')
   }
+
   function handleSave() {
     props.onclose(nameInputValue)
   }
-
 
   return (
     <Modal show={props.show} onHide={ handleClose }>

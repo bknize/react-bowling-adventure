@@ -12,17 +12,16 @@ export function stateInit(init = framesInit): GameState {
     }
   }
   
-  function framesInit(): FrameModel[] {
+function framesInit(): FrameModel[] {
     return new Array(10).fill({
-          rolls: [],
-          maxRolls: 2,
-          isStrike: false,
-          isSpare: false,
-          totalScore: 0,
-          bonusScore: 0
-        }
-      )
-  }
+            rolls: [],
+            maxRolls: 2,
+            isStrike: false,
+            isSpare: false,
+            totalScore: 0,
+            bonusScore: 0
+        })
+}
 
 export function perfectGameInit(): GameState {
     let state = stateInit()

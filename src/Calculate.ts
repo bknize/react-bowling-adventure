@@ -1,4 +1,5 @@
 import { FrameModel } from './Frames/Frame';
+
 export function calculateBonusScore(frames: FrameModel[]): FrameModel[] {
     return frames.map((frame, index) => {
         let bonusRolls: number[] = []
